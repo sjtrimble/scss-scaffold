@@ -1,16 +1,25 @@
 {
   "name": "scss-scaffold",
-  "version": "0.0.0",
-  "description": "A blank schematics",
+  "version": "0.0.1",
+  "description": "Add SCSS based files and folder structure to Angular CLI app",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && jasmine src/**/*_spec.js",
     "prepare": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sjtrimble/scss-scaffold"
+  },
   "keywords": [
-    "schematics"
+    "schematics",
+    "scss",
+    "sass",
+    "css styles",
+    "angular styles",
+    "angular"
   ],
-  "author": "",
+  "author": "Stefanie Fluin",
   "license": "MIT",
   "schematics": "./src/collection.json",
   "dependencies": {
