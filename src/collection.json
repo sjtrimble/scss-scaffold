@@ -1,0 +1,14 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Add SCSS folder and directory file scaffolding.",
+      "factory": "./ng-add/index#ngAdd"
+    },
+    "scss-scaffold": {
+      "factory": "./",
+      "description": "Add SCSS folder and directory file scaffolding.",
+      "schema": "./ng-add/index#ngAdd"
+    }
+  }
+}

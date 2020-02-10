@@ -1,0 +1,17 @@
+/* ========================
+ANIMATION MIXINS
+=========================*/
+
+@mixin grow($scale) {
+    transition: all .2s ease-in-out;
+  
+    &:hover {
+      transform: scale($scale);
+    }
+  }
+  
+  @mixin animation-rotate($degrees) {
+    animation: spin .5s ease-in-out 0s 1 forwards normal;
+    transition-duration: 0.5s;
+    transform: rotate($degrees);
+  }

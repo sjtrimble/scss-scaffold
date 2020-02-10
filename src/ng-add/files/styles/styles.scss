@@ -1,0 +1,16 @@
+// import global themes (optional)
+
+// import helpers - this goes first to establish variables if needed
+@import './3-helpers/helpers-dir';
+
+// import vendor (optional for all third party libraries)
+// @import './4-vendor/vendor-dir';
+
+// import directories - these go last to override any vendor items
+@import './0-base/base-dir';
+@import './1-pages/pages-dir';
+@import './2-modules/modules-dir';
+
+// import print styles
+@import 'print';
+
