@@ -15,14 +15,17 @@ import { getFileContent } from '@schematics/angular/utility/test';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { scssScaffoldOptions } from './schema';
 
-export function setupOptions(host: Tree, options: any): Tree {
+export function setupOptions(host: Tree, options: scssScaffoldOptions): Tree {
   const workspace = getWorkspace(host);
   const workspaceConfig = host.read('angular.json');
   if (!workspaceConfig) {
     throw new SchematicsException("Now at Angular CLI workspace"); 
   }
-  const project = workspace.projects[options.project];
-  console.log('project: ', project);
+
+  if (!options.project) {
+    options.project = Object.keys(workspace.projects)[0];
+  }
+
   return host;
 }
 
