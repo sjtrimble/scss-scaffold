@@ -10,14 +10,15 @@ import {
   url,
   chain,
   SchematicsException,
+  MergeStrategy,
 } from '@angular-devkit/schematics';
-import { getFileContent } from '@schematics/angular/utility/test';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { scssScaffoldOptions } from './schema';
 
 export function setupOptions(host: Tree, options: scssScaffoldOptions): Tree {
   const workspace = getWorkspace(host);
   const workspaceConfig = host.read('angular.json');
+
   if (!workspaceConfig) {
     throw new SchematicsException("Now at Angular CLI workspace"); 
   }
@@ -30,32 +31,44 @@ export function setupOptions(host: Tree, options: scssScaffoldOptions): Tree {
 }
 
 // Update CLI angular.json file
-function updateCLIConfig(options: scssScaffoldOptions): Rule {
-  return (host: Tree) => {
-      const CLIConfig = JSON.parse(getFileContent(host, `angular.json`));
-      CLIConfig.projects[options.project].architect.build.options.styles = {
-          fileReplacements: [
-              {
-                  "replace": "src/styles.scss",
-                  "with": "src/styles/styles.scss"
-              }
-          ]
-      };
-      return host;
+function updateCLIConfig(options: scssScaffoldOptions, host: Tree) {
+  const { getWorkspace, updateWorkspace } = require('@schematics/angular/utility/workspace');
+  const workspace = getWorkspace(host);
+  const stylesPath = 'src/styles/styles.scss';
+  const angularJsonFile = host.read('angular.json');
+
+  if(angularJsonFile) {
+    const angularJsonFileObject = JSON.parse(angularJsonFile.toString('utf-8'));
+    console.log("angular file object", angularJsonFileObject);
+    const project = options.project ? options.project : Object.keys(angularJsonFileObject['projects'])[0];
+    const projectObject = angularJsonFileObject.projects[project];
+    const styles = projectObject.architect.build.options.styles;
+
+    // Add new styles file path to angular.json styles object
+    styles.push(stylesPath);
+
+    console.log("BLARH no need to rerun link");
+
+    // Write back updated angular.json file
+    host.overwrite('angular.json', JSON.stringify(angularJsonFileObject, null, "\t"));
   }
+
+  updateWorkspace(workspace);
+  return host;
+
 }
 
 export function ngAdd(options: scssScaffoldOptions): Rule {
   return (host: Tree, _context: SchematicContext) => {
     setupOptions(host, options);
-    updateCLIConfig(options);
+    updateCLIConfig(options, host);
 
     // Rename original SCSS file
     if (host.exists('src/styles.scss')) {
       host.rename('src/styles.scss', 'src/original-styles.scss');
     }
 
-    // Add SCSS Folders and Files
+    // Add SCSS folders and files
     const templateSource = apply(url('./files'), [
       template({}),
       move('src')
@@ -63,7 +76,7 @@ export function ngAdd(options: scssScaffoldOptions): Rule {
 
     const rule = chain([
       branchAndMerge(chain([
-        mergeWith(templateSource)
+        mergeWith(templateSource, MergeStrategy.Default)
  ,     ]))
     ]);
 
