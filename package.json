@@ -22,6 +22,9 @@
   "author": "Stefanie Fluin",
   "license": "MIT",
   "schematics": "./src/collection.json",
+  "ng-add": {
+    "save": false
+  },
   "dependencies": {
     "@angular-devkit/core": "^9.0.1",
     "@angular-devkit/schematics": "^9.0.1",
